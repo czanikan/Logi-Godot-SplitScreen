@@ -51,3 +51,23 @@ func get_input():
 func _physics_process(delta):
 	get_input()
 	playerInstance.Velocity = move_and_slide(playerInstance.Velocity)
+	
+func claim_tile(claim, enemy_tile):
+	if tileMap.get_cellv(tileMap.world_to_map(position)) == 0:
+		tileMap.set_cellv(tileMap.world_to_map(position), claim)
+		playerInstance.Points += 1
+		pointLabel.text = "Points: " + str(playerInstance.Points)
+		
+	if tileMap.get_cellv(tileMap.world_to_map(position)) == enemy_tile:
+		position = playerInstance.StartPosition
+		visible = false
+		set_physics_process(false)
+		yield(get_tree().create_timer(playerInstance.DeathTime), "timeout")
+		visible = true
+		set_physics_process(true)
+		
+func _process(delta):
+	if name == "Player1":
+		claim_tile(3, 2)
+	if name == "Player2":
+		claim_tile(2, 3)
